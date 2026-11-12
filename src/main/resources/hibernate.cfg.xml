@@ -15,7 +15,7 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Registro de Entidades -->
-        <mapping class="ut4.persistencia.lab3.Planeta"/>
-        <mapping class="ut4.persistencia.lab3.Nave"/>
+        <mapping class="ut4.lab4.Planeta"/>
+        <mapping class="ut4.lab4.Nave"/>
     </session-factory>
 </hibernate-configuration>
