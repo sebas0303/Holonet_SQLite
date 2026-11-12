@@ -1,88 +1,80 @@
 package ut4.lab4;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "naves")
-public class Nave {
+@Entity 
+@Table(name = "naves") // Vincula la clase con la tabla exacta de la BD
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(
+        name = "tipo_nave",
+        discriminatorType = DiscriminatorType.STRING) 
+
+public abstract class Nave{
+    
+    
+    // 1. Clave Primaria Autonumérica
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "nave_id")
-    private Integer nave_id;
-    
-    @Column(name = "nombre", length = 100, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Mapea el tipo 'SERIAL' de Postgres
+    @Column(name = "nave_id") // Vincula el atributo con el nombre exacto de la columna
+    private int id;
+
+    // 2. Columnas obligatorias (NOT NUL)
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
-    
-    @Column(name = "modelo", length = 50, nullable = false)
+
+    @Column(name = "modelo", nullable = false, length = 50)
     private String modelo;
-    
-    @Column(name = "estado_sistema", length = 20, nullable = false)
+
+
+    @Column(name = "estado_sistema", nullable = false, length = 20)
     private String estadoSistema;
-    
-    // Relación bidireccional (Lado propietario)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "planeta_origen_id")
+
+    // Nota: Dejamos fuera temporalmente 'planeta_origen_id' para explicar 
+    // las relaciones @ManyToOne en la siguiente sesión práctica.
+ // MAPEO DE LA RELACIÓN MUCHOS A UNO
+    @ManyToOne(fetch = FetchType.LAZY) // LAZY evita cargar el planeta de la BD a menos que se invoque explícitamente
+    @JoinColumn(name = "planeta_origen_id", foreignKey = @ForeignKey(name = "FK_NAVE_PLANETA"))
     private Planeta planetaOrigen;
 
-    public Nave() {}
+    // === REQUISITO MANDATORIO JPA: Constructor vacío (por defecto) ===
+    public Nave() {
+    }
 
-    public Nave(String nombre, String modelo, String estadoSistema, Planeta planetaOrigen) {
+    // Constructor parametrizado para facilitar las inserciones en los laboratorios
+    public Nave(int id, String nombre, String modelo, String estadoSistema, Planeta planetaOrigen) {
+        this.id = id;
         this.nombre = nombre;
         this.modelo = modelo;
         this.estadoSistema = estadoSistema;
         this.planetaOrigen = planetaOrigen;
     }
 
-    public Integer getNave_id() {
-        return nave_id;
-    }
+    // === Métodos de acceso públicos (Getters y Setters) ===
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setNave_id(Integer nave_id) {
-        this.nave_id = nave_id;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public String getEstadoSistema() { return estadoSistema; }
+    public void setEstadoSistema(String estadoSistema) { this.estadoSistema = estadoSistema; }
 
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public String getEstadoSistema() {
-        return estadoSistema;
-    }
-
-    public void setEstadoSistema(String estadoSistema) {
-        this.estadoSistema = estadoSistema;
-    }
-
-    public Planeta getPlanetaOrigen() {
-        return planetaOrigen;
-    }
-
-    public void setPlanetaOrigen(Planeta planetaOrigen) {
-        this.planetaOrigen = planetaOrigen;
-    }
-
-    @Override
-    public String toString() {
-        return "Nave{" + "nave_id=" + nave_id + ", nombre=" + nombre + ", modelo=" + modelo + ", estadoSistema=" + estadoSistema + ", planetaOrigen=" + planetaOrigen + '}';
-    } 
+    public Planeta getPlanetaOrigen() { return planetaOrigen; }
+    public void setPlanetaOrigen(Planeta planetaOrigen) { this.planetaOrigen = planetaOrigen; }  
 }
