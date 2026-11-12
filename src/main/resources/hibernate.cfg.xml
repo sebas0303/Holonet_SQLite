@@ -4,16 +4,13 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <!-- Conexión a PostgreSQL -->
-        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/holonet_db</property>
-        <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">1234</property>
-
-        <!-- Configuración de Hibernate 6 -->
-        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.format_sql">true</property>
+        <!-- Conexión a SQLite -->
+        <property name="connection.autocommit">true</property>
+        <property name="show_sql">true</property>
+        <property name = "hibernate.dialect">org.hibernate.dialect.SQLiteDialect</property>
+        <property name = "hibernate.connection.driver_class">org.sqlite.JDBC</property>
+        <property name = "hibernate.connection.url">jdbc:sqlite:holonet.db</property>
+        
         <!-- Crea/Actualiza las tablas automáticamente -->
         <property name="hibernate.hbm2ddl.auto">update</property>
 
